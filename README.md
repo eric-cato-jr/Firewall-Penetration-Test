@@ -27,7 +27,9 @@ The engagement followed this workflow:
 - Nessus Essentials  
 - Greenbone (OpenVAS)  
 
-This environment simulated a perimeter firewall protecting internal services while exposing selected resources externally.
+### Network Topology
+
+![Network Topology](networktop.png)
 
 ---
 
@@ -38,6 +40,22 @@ Firewall inspection revealed:
 - Public 1:1 NAT exposure of an internal server  
 - WAN rules allowing HTTP and HTTPS access  
 - An overly permissive “Default allow LAN to any” rule  
+
+### WAN Rules (Before Hardening)
+
+![WAN Rules Before](Wan-Rules-Before.png)
+
+### NAT Mapping
+
+![NAT Mapping](nat-mapping.png)
+
+### Virtual IP Configuration
+
+![Virtual IP](virtual-ip.png)
+
+### Default LAN Rule
+
+![Default Allow LAN](default-allow-lan.png)
 
 These configurations increased the attack surface by allowing unnecessary inbound and outbound traffic.
 
@@ -53,6 +71,8 @@ Open services detected included:
 - SSH (22/tcp)  
 - HTTP (80/tcp)  
 
+![Nmap Open Ports](nmap-open-ports.png)
+
 These results confirmed that multiple services were externally reachable and potentially exploitable.
 
 ---
@@ -66,7 +86,17 @@ Nessus scanning identified multiple medium-severity findings, including:
 - SMB signing not enforced  
 - Service configuration weaknesses  
 
-Greenbone (OpenVAS) was used as a secondary scanner to validate findings.
+### Nessus Summary
+
+![Nessus Summary](nessus-summary.png)
+
+### Nessus Detailed Findings
+
+![Nessus Vulnerabilities](nessus-vulns.png)
+
+### Greenbone Validation
+
+![Greenbone Validation](greenbone-valid.png)
 
 The assessment confirmed that firewall misconfiguration contributed directly to risk exposure.
 
@@ -92,6 +122,14 @@ After hardening, re-scanning confirmed:
 - Previously open services were no longer externally accessible  
 - Scanned ports were filtered or properly restricted  
 - Vulnerabilities were eliminated or significantly reduced  
+
+### Nmap Filtered Scan
+
+![Nmap Filtered](namp filtered.png)
+
+### Final Nessus Scan
+
+![Final Nessus Scan](nessus-final.png)
 
 This validated that firewall rule enforcement was effective.
 
