@@ -2,172 +2,181 @@
 
 ## 📌 Overview
 
-This project documents a structured firewall penetration test conducted in a segmented lab environment. The objective was to identify exposed services, assess vulnerabilities, reduce the attack surface through firewall rule hardening, and validate remediation through re-scanning.
+This lab demonstrates a structured firewall penetration test followed by attack surface reduction and remediation validation.
 
-The engagement followed this workflow:
+The objective was to:
 
-- Attack surface analysis  
-- Service enumeration (Nmap)  
-- Vulnerability assessment (Nessus / OpenVAS)  
-- Firewall rule hardening  
-- Post-remediation validation  
+- Identify externally exposed services
+- Assess vulnerabilities
+- Harden firewall configurations
+- Validate remediation effectiveness
 
 ---
 
 ## 🖥️ Lab Environment
 
-**Infrastructure:**
-- pfSense Firewall  
-- Windows Server (public-facing)  
-- Linux Web Server  
-- Kali Linux attacker machine  
+### Infrastructure
 
-**Tools Used:**
-- Nmap  
-- Nessus Essentials  
-- Greenbone (OpenVAS)  
+- pfSense Firewall
+- Windows Server (Public-Facing Host)
+- Linux Target Server
+- Kali Linux (Attacker Machine)
 
 ### Network Topology
+
+The environment consists of a segmented internal network behind a pfSense firewall with public NAT exposure.
 
 ![Network Topology](networktop.png)
 
 ---
 
-## 🌐 Initial Attack Surface
+# 1️⃣ Initial Attack Surface Analysis
 
-Firewall inspection revealed:
-
-- Public 1:1 NAT exposure of an internal server  
-- WAN rules allowing HTTP and HTTPS access  
-- An overly permissive “Default allow LAN to any” rule  
+Before testing, firewall rules and NAT configurations were reviewed.
 
 ### WAN Rules (Before Hardening)
 
+These rules allowed inbound HTTP/HTTPS traffic to the internal server.
+
 ![WAN Rules Before](Wan-Rules-Before.png)
 
-### NAT Mapping
+### 1:1 NAT Mapping
+
+The internal Windows server (172.30.0.15) was directly mapped to a public IP.
 
 ![NAT Mapping](nat-mapping.png)
 
 ### Virtual IP Configuration
 
+The WAN interface had an IP alias exposing the internal host externally.
+
 ![Virtual IP](virtual-ip.png)
 
 ### Default LAN Rule
 
+A “Default allow LAN to any” rule was present, permitting unrestricted outbound access.
+
 ![Default Allow LAN](default-allow-lan.png)
 
-These configurations increased the attack surface by allowing unnecessary inbound and outbound traffic.
+⚠️ These configurations significantly increased the firewall’s attack surface.
 
 ---
 
-## 🔎 Open Services Identified
+# 2️⃣ Service Enumeration (Nmap)
 
-Manual enumeration was performed using Nmap with service detection and OS fingerprinting.
+Active reconnaissance was performed from the attacker machine using Nmap with:
 
-Open services detected included:
+- Service detection
+- Version detection
+- OS fingerprinting
 
-- FTP (21/tcp)  
-- SSH (22/tcp)  
-- HTTP (80/tcp)  
+The scan revealed externally accessible services including:
 
-![Nmap Open Ports](nmap-open-ports.png)
+- FTP (21)
+- SSH (22)
+- HTTP (80)
 
-These results confirmed that multiple services were externally reachable and potentially exploitable.
+### Nmap Service & OS Detection Output
+
+![Nmap Scan Output](namp filtered.png)
+
+This confirmed that multiple services were publicly reachable.
 
 ---
 
-## 🛡️ Vulnerability Assessment
+# 3️⃣ Vulnerability Assessment
 
-Nessus scanning identified multiple medium-severity findings, including:
+After identifying exposed services, vulnerability scanning was conducted using Nessus.
 
-- TLS 1.0 enabled  
-- Self-signed SSL certificate  
-- SMB signing not enforced  
-- Service configuration weaknesses  
+### Nessus Scan Summary
 
-### Nessus Summary
+Both hosts were scanned using a Basic Network Scan policy.
 
 ![Nessus Summary](nessus-summary.png)
 
+The scan identified several medium-severity vulnerabilities.
+
 ### Nessus Detailed Findings
+
+Key issues included:
+
+- Weak TLS configuration
+- Self-signed certificates
+- SMB configuration weaknesses
+- Outdated services
 
 ![Nessus Vulnerabilities](nessus-vulns.png)
 
-### Greenbone Validation
-
-![Greenbone Validation](greenbone-valid.png)
-
-The assessment confirmed that firewall misconfiguration contributed directly to risk exposure.
+These findings confirmed that exposed services introduced measurable risk.
 
 ---
 
-## 🔧 Security Hardening
+# 4️⃣ Firewall Hardening & Attack Surface Reduction
 
-The following remediation steps were implemented:
+To reduce risk, the following changes were implemented:
 
-- Removed unnecessary WAN firewall rules  
-- Deleted “Default allow LAN to any” rule  
-- Restricted inbound access to required services only  
-- Reduced publicly exposed ports  
+- Removed unnecessary WAN rules
+- Restricted inbound service exposure
+- Removed overly permissive LAN rules
+- Reduced NAT exposure
+- Limited public service access
 
-These actions significantly reduced the external attack surface.
+Firewall rules were restructured to follow a least-privilege model.
 
 ---
 
-## ✅ Post-Remediation Validation
+# 5️⃣ Post-Remediation Validation
 
-After hardening, re-scanning confirmed:
+After hardening, re-scanning was performed to validate improvements.
 
-- Previously open services were no longer externally accessible  
-- Scanned ports were filtered or properly restricted  
-- Vulnerabilities were eliminated or significantly reduced  
+### Nmap Post-Hardening Scan
 
-### Nmap Filtered Scan
+Previously open ports were now filtered or inaccessible.
 
-![Nmap Filtered](namp filtered.png)
+![Nmap Post-Hardening](nmap-filtered.png)
 
 ### Final Nessus Scan
 
+The final scan showed vulnerabilities were eliminated or significantly reduced.
+
 ![Final Nessus Scan](nessus-final.png)
 
-This validated that firewall rule enforcement was effective.
+This confirmed that firewall modifications were effective.
 
 ---
 
-## 📊 Before vs After
+# 📊 Before vs After
 
 | Category | Before | After |
 |----------|--------|--------|
-| NAT Exposure | Enabled | Restricted |
-| WAN Open Ports | Multiple services | Filtered |
-| LAN Default Rule | Allow any | Removed |
-| Vulnerabilities | Multiple findings | Reduced / Eliminated |
-| External Scan | Services exposed | No accessible services |
+| Public NAT Exposure | Enabled | Restricted |
+| Open Services | Multiple exposed | Filtered |
+| LAN Rule | Allow Any | Restricted |
+| Vulnerabilities | Medium findings | Reduced / Removed |
 
 ---
 
-## 🧠 Skills Demonstrated
+# 🧠 Skills Demonstrated
 
-- Network reconnaissance (Nmap)  
-- Vulnerability assessment (Nessus, OpenVAS)  
-- Firewall rule analysis (pfSense)  
-- Attack surface reduction  
-- Security remediation workflow  
-- Validation and re-testing  
-
----
-
-## 🔐 Key Takeaways
-
-- Overly permissive firewall rules dramatically increase attack surface.  
-- NAT exposure must be tightly controlled.  
-- Vulnerability scanning should be paired with configuration review.  
-- Post-remediation validation is critical.  
-- Effective security requires both offensive testing and defensive hardening.  
+- Network reconnaissance (Nmap)
+- Vulnerability assessment (Nessus)
+- Firewall rule analysis (pfSense)
+- NAT configuration review
+- Attack surface reduction
+- Security remediation validation
 
 ---
 
-## 🚀 Conclusion
+# 🔐 Key Takeaways
 
-This project demonstrates a complete firewall penetration testing and hardening lifecycle. Through reconnaissance, vulnerability assessment, rule modification, and validation scanning, the overall attack surface was successfully reduced.
+- Firewall misconfigurations directly expand attack surface.
+- NAT exposure must be tightly controlled.
+- Vulnerability scans validate real-world impact.
+- Hardening must always be followed by re-testing.
+- Defense requires both offensive testing and corrective action.
+
+---
+
+# 🚀 Conclusion
+
+This lab demonstrates a complete penetration testing and firewall hardening lifecycle. Through structured reconnaissance, vulnerability analysis, configuration review, and remediation validation, the firewall’s attack surface was successfully reduced.
