@@ -139,7 +139,7 @@ After implementing firewall hardening, re-scanning was performed to validate imp
 
 An additional vulnerability scan was performed using a separate scanning tool to confirm remediation effectiveness.
 
-![Greenbone Validation](greenbone-valid.png)
+![Greenbone Validation](greenbone-scan.png)
 
 The scan results showed significant reduction in previously identified findings.
 
