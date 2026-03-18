@@ -98,10 +98,10 @@ The summary view displayed the total number of vulnerabilities detected across t
 
 Key findings included:
 
-- Weak TLS configuration
-- Self-signed certificates
-- Outdated service versions
-- Insecure protocol configurations
+- Weak TLS configuration  
+- Self-signed certificates  
+- Outdated service versions  
+- Insecure protocol configurations  
 
 These vulnerabilities were directly associated with exposed services and permissive firewall rules.
 
@@ -111,19 +111,20 @@ These vulnerabilities were directly associated with exposed services and permiss
 
 To mitigate identified risks, firewall configurations were modified to follow a least-privilege model.
 
-Remediation actions included:
-
-- Removing unnecessary WAN exposure rules
-- Deleting port 80 (HTTP) access
-- Removing Windows Server exposure rule
-- Deleting the “Default allow LAN to any” rule
-- Restricting inbound service access
-
 ## Default LAN Rule Removed
 
 ![Default Allow LAN](default-allow-lan.png)
 
-By eliminating overly permissive rules, external and lateral attack vectors were significantly reduced.
+The overly permissive **“Default allow LAN to any”** rule was deleted to prevent unrestricted outbound traffic and reduce lateral movement risk.
+
+Additional remediation steps included:
+
+- Removing unnecessary WAN exposure rules  
+- Deleting port 80 (HTTP) access  
+- Removing Windows Server public exposure rule  
+- Restricting inbound services to only what was required  
+
+These changes significantly reduced the externally reachable attack surface.
 
 ---
 
@@ -133,11 +134,11 @@ After implementing firewall hardening, re-scanning was conducted to verify effec
 
 ## Greenbone Validation Scan
 
-An additional vulnerability scan was performed using Greenbone to independently validate remediation.
+An independent vulnerability scan was performed using Greenbone to validate remediation.
 
 ![Greenbone Scan](greenbone-scan.png)
 
-The results confirmed a significant reduction in previously identified vulnerabilities following firewall modifications.
+The results showed a significant reduction in previously identified vulnerabilities after firewall rule modifications.
 
 ---
 
@@ -147,12 +148,12 @@ A final Nessus scan was conducted to confirm remediation success.
 
 ![Final Nessus Scan](nessus-final.png)
 
-The results showed that previously identified vulnerabilities were eliminated or substantially reduced, confirming the effectiveness of firewall hardening.
+The results showed that previously identified vulnerabilities were eliminated or substantially reduced, confirming that firewall hardening was effective.
 
 ---
 
 # 🚀 Conclusion
 
-This lab demonstrates a complete firewall penetration testing and hardening lifecycle. Through structured reconnaissance, vulnerability assessment, configuration review, rule modification, and validation scanning, the firewall’s attack surface was successfully reduced.
+This lab demonstrates a complete firewall penetration testing and hardening lifecycle. Through reconnaissance, vulnerability identification, firewall rule modification, and validation scanning, the overall attack surface was successfully reduced.
 
-The exercise highlights the importance of reviewing firewall exposure, applying least-privilege configurations, and validating remediation through multiple scanning tools to ensure measurable security improvement.
+The exercise reinforces the importance of reviewing firewall exposure, enforcing least-privilege configurations, and validating remediation using multiple assessment tools to ensure measurable security improvement.
