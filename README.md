@@ -68,7 +68,7 @@ Active reconnaissance was conducted using Nmap with:
 
 ## Nmap Service & OS Detection Output
 
-![Nmap Enumeration](namp filtered.png)
+![Nmap Enumeration](namp-filtered.png)
 
 The scan identified publicly accessible services including:
 
